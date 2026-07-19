@@ -1,7 +1,9 @@
+
+
+Stillness · HTML
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <link rel="icon" type="image/png" href="favicon.png">
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Stillness — Type with the Philosophers</title>
@@ -24,11 +26,11 @@
     --card-border:rgba(255,255,255,0.9);
     --shadow: 0 20px 60px -25px rgba(28,43,58,0.25);
   }
-
+ 
   *{box-sizing:border-box; margin:0; padding:0;}
-
+ 
   html,body{height:100%;}
-
+ 
   body{
     font-family:'Inter', sans-serif;
     color:var(--ink);
@@ -40,11 +42,11 @@
     display:flex;
     flex-direction:column;
   }
-
+ 
   ::selection{ background: var(--accent); color:#fff; }
-
+ 
   a{ color:inherit; }
-
+ 
   /* ---------- Header ---------- */
   header{
     display:flex;
@@ -55,19 +57,19 @@
     margin:0 auto;
     width:100%;
   }
-
+ 
   .brand{
     display:flex;
     align-items:center;
     gap:12px;
   }
-
+ 
   .brand-mark{
     width:22px; height:22px; border-radius:50%;
     background: radial-gradient(circle at 35% 30%, #ffffff, var(--accent) 70%);
     box-shadow: 0 0 18px rgba(90,127,181,0.55);
   }
-
+ 
   .brand-name{
     font-family:'Newsreader', serif;
     font-style:italic;
@@ -75,9 +77,9 @@
     font-size:22px;
     letter-spacing:0.01em;
   }
-
+ 
   nav{ display:flex; gap:8px; }
-
+ 
   .nav-btn{
     font-family:'Inter', sans-serif;
     font-size:14px;
@@ -93,7 +95,7 @@
   }
   .nav-btn:hover{ color:var(--ink); background:rgba(255,255,255,0.5); }
   .nav-btn.active{ color:#fff; background:var(--accent-deep); box-shadow: var(--shadow); }
-
+ 
   main{
     flex:1;
     max-width:1200px;
@@ -101,14 +103,14 @@
     width:100%;
     padding:20px 56px 100px;
   }
-
+ 
   .view{ display:none; animation: fadeIn .5s ease; }
   .view.active{ display:block; }
-
+ 
   @keyframes fadeIn{ from{ opacity:0; transform:translateY(8px);} to{opacity:1; transform:translateY(0);} }
-
+ 
   /* ---------- Type View ---------- */
-
+ 
   .hero-line{
     text-align:center;
     font-family:'Newsreader', serif;
@@ -120,7 +122,7 @@
     margin:8px auto 40px;
     line-height:1.6;
   }
-
+ 
   .controls{
     display:flex;
     align-items:center;
@@ -129,7 +131,7 @@
     margin-bottom:56px;
     flex-wrap:wrap;
   }
-
+ 
   .mode-group{
     display:flex;
     background:var(--card);
@@ -139,7 +141,7 @@
     box-shadow: var(--shadow);
     backdrop-filter: blur(12px);
   }
-
+ 
   .mode-btn{
     border:none;
     background:transparent;
@@ -154,7 +156,7 @@
   }
   .mode-btn.selected{ background:var(--accent-deep); color:#fff; }
   .mode-btn:hover:not(.selected){ color:var(--ink); }
-
+ 
   .start-btn{
     font-family:'Inter', sans-serif;
     font-weight:600;
@@ -171,7 +173,7 @@
   }
   .start-btn:hover{ transform:translateY(-1px); box-shadow: 0 16px 34px -12px rgba(47,74,115,0.65); }
   .start-btn:active{ transform:translateY(0); }
-
+ 
   /* Moon progress + live stats */
   .session-bar{
     display:flex;
@@ -185,7 +187,7 @@
     transition: opacity .4s ease;
   }
   .session-bar.show{ opacity:1; height:auto; overflow:visible; margin-bottom:44px; }
-
+ 
   .moon{
     width:46px; height:46px;
     border-radius:50%;
@@ -201,7 +203,7 @@
     clip-path: circle(0% at 50% 50%);
     transition: clip-path .3s linear;
   }
-
+ 
   .live-stats{
     display:flex;
     gap:28px;
@@ -210,7 +212,7 @@
   .live-stat{ text-align:center; }
   .live-stat .num{ font-size:22px; font-weight:700; color:var(--ink); font-variant-numeric: tabular-nums; }
   .live-stat .lbl{ font-size:11px; text-transform:uppercase; letter-spacing:0.08em; color:var(--muted); margin-top:2px; }
-
+ 
   /* Typing stage */
   .stage{
     background:var(--card);
@@ -227,7 +229,7 @@
     position:relative;
     overflow:hidden;
   }
-
+ 
   .quote-text{
     font-family:'Newsreader', serif;
     font-size:29px;
@@ -240,7 +242,7 @@
     word-wrap:break-word;
     overflow-wrap:break-word;
   }
-
+ 
   .quote-text span{ transition: color .08s ease; }
   .char-pending{ color:var(--muted-2); }
   .char-correct{ color:var(--ink); }
@@ -255,7 +257,7 @@
     animation: blink 1s step-end infinite;
   }
   @keyframes blink{ 50%{ opacity:0; } }
-
+ 
   .stage-hint{
     position:absolute;
     bottom:20px;
@@ -263,18 +265,37 @@
     color:var(--muted);
     letter-spacing:0.02em;
   }
-
+ 
+  .hidden-input{
+    position:absolute;
+    inset:0;
+    width:100%;
+    height:100%;
+    opacity:1;
+    color:transparent;
+    caret-color:transparent;
+    -webkit-text-fill-color:transparent;
+    border:none;
+    outline:none;
+    background:transparent;
+    font-size:16px;
+    z-index:5;
+    cursor:text;
+    -webkit-appearance:none;
+    -webkit-tap-highlight-color:transparent;
+  }
+ 
   .idle-note{
     font-family:'Inter', sans-serif;
     font-size:14px;
     color:var(--muted);
     text-align:center;
   }
-
+ 
   /* ---------- Results ---------- */
   .results-wrap{ display:none; }
   .results-wrap.show{ display:block; animation: fadeIn .5s ease; }
-
+ 
   .results-stats{
     display:grid;
     grid-template-columns: repeat(4, 1fr);
@@ -282,7 +303,7 @@
     max-width:760px;
     margin:0 auto 48px;
   }
-
+ 
   .stat-card{
     background:var(--card);
     border:1px solid var(--card-border);
@@ -294,7 +315,7 @@
   }
   .stat-card .num{ font-family:'Newsreader', serif; font-size:38px; font-weight:500; color:var(--accent-deep); }
   .stat-card .lbl{ margin-top:6px; font-size:12px; text-transform:uppercase; letter-spacing:0.08em; color:var(--muted); }
-
+ 
   .passages-heading{
     text-align:center;
     font-size:12px;
@@ -303,7 +324,7 @@
     color:var(--muted);
     margin-bottom:22px;
   }
-
+ 
   .passage-card{
     max-width:680px;
     margin:0 auto 18px;
@@ -328,13 +349,13 @@
     color:var(--accent-deep);
     letter-spacing:0.02em;
   }
-
+ 
   .results-actions{
     display:flex;
     justify-content:center;
     margin-top:40px;
   }
-
+ 
   /* ---------- Dashboard ---------- */
   .dash-grid{
     display:grid;
@@ -342,7 +363,7 @@
     gap:18px;
     margin-bottom:52px;
   }
-
+ 
   .dash-card{
     background:var(--card);
     border:1px solid var(--card-border);
@@ -354,7 +375,7 @@
   }
   .dash-card .num{ font-family:'Newsreader', serif; font-size:40px; font-weight:500; color:var(--accent-deep); font-variant-numeric: tabular-nums; }
   .dash-card .lbl{ margin-top:8px; font-size:12px; text-transform:uppercase; letter-spacing:0.08em; color:var(--muted); }
-
+ 
   .history-heading{
     font-size:12px;
     text-transform:uppercase;
@@ -362,7 +383,13 @@
     color:var(--muted);
     margin-bottom:18px;
   }
-
+  .history-hint{
+    text-transform:none;
+    letter-spacing:normal;
+    font-size:12px;
+    color:var(--muted-2);
+  }
+ 
   .history-list{
     background:var(--card);
     border:1px solid var(--card-border);
@@ -378,7 +405,10 @@
     padding:16px 28px;
     border-bottom:1px solid rgba(28,43,58,0.06);
     font-size:14px;
+    cursor:pointer;
+    transition: background .2s ease;
   }
+  .history-row:hover{ background:rgba(90,127,181,0.08); }
   .history-row:last-child{ border-bottom:none; }
   .history-row .mode-tag{
     font-size:11px;
@@ -391,14 +421,63 @@
   }
   .history-row .h-metrics{ display:flex; gap:22px; color:var(--ink-soft); }
   .history-row .h-date{ color:var(--muted); font-size:12px; }
-
+ 
+  .modal-overlay{
+    display:none;
+    position:fixed;
+    inset:0;
+    background:rgba(20,30,42,0.4);
+    backdrop-filter: blur(4px);
+    z-index:100;
+    align-items:center;
+    justify-content:center;
+    padding:24px;
+  }
+  .modal-overlay.show{ display:flex; animation: fadeIn .25s ease; }
+ 
+  .modal-card{
+    position:relative;
+    background:#F7FAFD;
+    border:1px solid var(--card-border);
+    border-radius:24px;
+    box-shadow: 0 30px 80px -20px rgba(20,30,42,0.45);
+    padding:44px 40px 36px;
+    max-width:640px;
+    width:100%;
+    max-height:82vh;
+    overflow-y:auto;
+  }
+ 
+  .modal-close{
+    position:absolute;
+    top:20px; right:24px;
+    background:none;
+    border:none;
+    font-size:12px;
+    color:var(--muted);
+    cursor:pointer;
+    letter-spacing:0.03em;
+    text-decoration:underline;
+  }
+  .modal-close:hover{ color:var(--ink); }
+ 
+  .modal-meta{
+    display:flex;
+    align-items:center;
+    gap:14px;
+    margin-bottom:24px;
+  }
+  .modal-date{ font-size:13px; color:var(--muted); }
+ 
+  .modal-stats{ max-width:none; margin-bottom:36px; }
+ 
   .empty-state{
     text-align:center;
     padding:60px 20px;
     color:var(--muted);
     font-size:14px;
   }
-
+ 
   .reset-row{
     text-align:center;
     margin-top:40px;
@@ -413,7 +492,7 @@
     letter-spacing:0.02em;
   }
   .reset-link:hover{ color:var(--error); }
-
+ 
   footer{
     text-align:center;
     padding:30px;
@@ -421,7 +500,7 @@
     color:var(--muted);
     letter-spacing:0.02em;
   }
-
+ 
   @media (max-width: 720px){
     header{ padding:24px 22px; flex-direction:column; gap:16px; }
     main{ padding:10px 22px 80px; }
@@ -435,7 +514,7 @@
 </style>
 </head>
 <body>
-
+ 
 <header>
   <div class="brand">
     <span class="brand-mark"></span>
@@ -446,15 +525,15 @@
     <button class="nav-btn" data-view="dashboard">Dashboard</button>
   </nav>
 </header>
-
+ 
 <main>
-
+ 
   <!-- TYPE VIEW -->
   <section class="view active" id="view-type">
-
+ 
     <div id="pre-session">
       <p class="hero-line">Borrow a little stillness from those who thought before you. Choose your time, and begin.</p>
-
+ 
       <div class="controls">
         <div class="mode-group" id="mode-group">
           <button class="mode-btn selected" data-mode="30">30s</button>
@@ -464,7 +543,7 @@
         <button class="start-btn" id="start-btn">Begin typing</button>
       </div>
     </div>
-
+ 
     <div class="session-bar" id="session-bar">
       <div class="moon"><div class="moon-fill" id="moon-fill"></div></div>
       <div class="live-stats">
@@ -473,13 +552,14 @@
         <div class="live-stat"><div class="num" id="live-acc">100%</div><div class="lbl">Accuracy</div></div>
       </div>
     </div>
-
+ 
     <div class="stage" id="stage">
       <div class="idle-note" id="idle-note">Your passage will appear here once you begin. Just start typing — no need to click anything first.</div>
       <div class="quote-text" id="quote-text" style="display:none;"></div>
-      <div class="stage-hint" id="stage-hint" style="display:none;">Backspace to correct a mistake</div>
+      <div class="stage-hint" id="stage-hint" style="display:none;">Tap here anytime to bring back the keyboard · Backspace fixes a mistake</div>
+      <input type="text" id="hidden-input" class="hidden-input" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" inputmode="text" aria-label="Typing input">
     </div>
-
+ 
     <!-- RESULTS -->
     <div class="results-wrap" id="results-wrap">
       <div class="results-stats">
@@ -488,17 +568,17 @@
         <div class="stat-card"><div class="num" id="res-incorrect">0</div><div class="lbl">Incorrect words</div></div>
         <div class="stat-card"><div class="num" id="res-time">0</div><div class="lbl">Time</div></div>
       </div>
-
+ 
       <div class="passages-heading">Passages you practiced</div>
       <div id="passages-list"></div>
-
+ 
       <div class="results-actions">
         <button class="start-btn" id="again-btn">Type again</button>
       </div>
     </div>
-
+ 
   </section>
-
+ 
   <!-- DASHBOARD VIEW -->
   <section class="view" id="view-dashboard">
     <div class="dash-grid">
@@ -507,26 +587,43 @@
       <div class="dash-card"><div class="num" id="dash-sessions">0</div><div class="lbl">Sessions</div></div>
       <div class="dash-card"><div class="num" id="dash-accuracy">0%</div><div class="lbl">Average accuracy</div></div>
     </div>
-
-    <div class="history-heading">Recent sessions</div>
+ 
+    <div class="history-heading">Recent sessions <span class="history-hint">· tap a session to see its passages</span></div>
     <div class="history-list" id="history-list">
       <div class="empty-state">Nothing here yet — your sessions will show up once you start typing.</div>
     </div>
-
+ 
     <div class="reset-row">
       <button class="reset-link" id="reset-btn">Clear my saved progress</button>
     </div>
   </section>
-
+ 
 </main>
-
+ 
+<div class="modal-overlay" id="session-modal">
+  <div class="modal-card">
+    <button class="modal-close" id="modal-close">Close</button>
+    <div class="modal-meta">
+      <span class="mode-tag" id="modal-mode">1 min</span>
+      <span class="modal-date" id="modal-date"></span>
+    </div>
+    <div class="results-stats modal-stats">
+      <div class="stat-card"><div class="num" id="modal-wpm">0</div><div class="lbl">Words / min</div></div>
+      <div class="stat-card"><div class="num" id="modal-acc">0%</div><div class="lbl">Accuracy</div></div>
+      <div class="stat-card"><div class="num" id="modal-incorrect">0</div><div class="lbl">Incorrect words</div></div>
+    </div>
+    <div class="passages-heading">Passages from this session</div>
+    <div id="modal-passages"></div>
+  </div>
+</div>
+ 
 <footer>Stillness · practice typing, one thought at a time</footer>
-
+ 
 <script>
 (function(){
-
+ 
   /* ---------------- Content pools ---------------- */
-
+ 
   const mediumQuotes = [
     { author: "Ashtavakra", text: "You are not the body, nor is the body yours to claim. You are neither the doer of any action nor the one who tastes its fruit. You are pure, silent awareness itself, the quiet witness watching every thought and feeling rise and fall without ever being touched by them." },
     { author: "Ashtavakra", text: "Only one thing truly binds a person, and that is the endless craving for pleasure. The moment that craving loosens its grip, freedom is no longer something distant to search for, because it was quietly present all along, waiting beneath the noise of desire." },
@@ -541,7 +638,7 @@
     { author: "Aristotle", text: "We become what we repeatedly do, day after ordinary day, without much fanfare. Excellence, then, was never a single dramatic act performed once, but a quiet habit built slowly, almost invisibly, through years of small consistent choices." },
     { author: "Aristotle", text: "Knowing yourself honestly is the true beginning of all wisdom, because a person who cannot clearly see their own nature will inevitably misjudge nearly everything else they encounter, from other people to the world itself." }
   ];
-
+ 
   const longQuotes = [
     { author: "Ashtavakra", text: "You are not this body, and the body was never truly yours to keep. You are neither the one performing any action, nor the one who later enjoys or suffers its results, no matter how convincing that feeling seems in the moment. Beneath every role you play, every name you carry, and every emotion that rises and eventually fades, there remains something unchanged and untouched: a quiet, silent awareness simply watching it all unfold. Most people spend their whole lives searching for peace outside themselves, chasing one desire after another, never realizing that the very thing they seek is the awareness doing the seeking. Rest there, and everything else quietly settles on its own." },
     { author: "Ashtavakra", text: "Only one thing truly binds a person to suffering, and that is the endless, restless craving for pleasure, chased again and again without ever being fully satisfied. The moment that craving finally loosens its grip, even slightly, freedom stops being some distant destination to search for far away. It was quietly present the entire time, waiting patiently beneath the noise and clutter of desire, unnoticed simply because attention was always pointed elsewhere. To rest in that quiet presence, even briefly, is to discover that nothing was ever truly missing, and nothing ever needed to be added, no matter how convincingly the mind insisted otherwise." },
@@ -554,7 +651,7 @@
     { author: "Aristotle", text: "We are, quite simply, what we repeatedly do, Aristotle argued, and excellence was therefore never meant to be a single dramatic act performed once and remembered forever. Instead, it is a quiet habit, built slowly and almost invisibly through years of small, consistent, and often unremarkable choices. Knowing oneself honestly, he believed, is the true beginning of all wisdom, since a person who cannot clearly see their own nature will inevitably misjudge nearly everything else they encounter in life. He also warned that educating the mind while neglecting the heart produces a person who may appear clever, yet remains, in every way that matters, fundamentally incomplete." },
     { author: "Aristotle", text: "Aristotle believed that virtue was not something a person is simply born with, nor something that can be taught through words alone, but something built gradually through repeated action, much like a musician learns their instrument through years of daily, ordinary practice rather than a single burst of inspiration. A person becomes brave, he argued, by repeatedly performing brave acts, and becomes just by repeatedly acting justly, until eventually the behavior settles quietly into character itself. In this way, every small choice a person makes, however unremarkable it may seem in the moment, is quietly building the kind of person they are slowly becoming." }
   ];
-
+ 
   const shortQuotes = [
     { author: "Franz Kafka", text: "Someone must have slandered him, for one morning, without having done anything wrong, he was arrested." },
     { author: "Franz Kafka", text: "A cage went in search of a bird, and for a long moment neither one knew what to do with the other." },
@@ -569,13 +666,13 @@
     { author: "Fyodor Dostoevsky", text: "Love a person even in their sin, for that faint reflection of love is a likeness of divine love itself." },
     { author: "Franz Kafka", text: "In the fight between you and the world, hold the door open for the world, and let it teach you slowly." }
   ];
-
+ 
   /* ---------------- Storage ---------------- */
-
+ 
   const STORAGE_KEY = "stillness_sessions_v1";
   const USAGE_KEY = "stillness_usage_v1";
   const MAX_USES = 3;
-
+ 
   function loadSessions(){
     try{ return JSON.parse(localStorage.getItem(STORAGE_KEY)) || []; }
     catch(e){ return []; }
@@ -590,9 +687,9 @@
   function saveUsage(u){
     try{ localStorage.setItem(USAGE_KEY, JSON.stringify(u)); }catch(e){}
   }
-
+ 
   function quoteKey(q){ return q.author + "::" + q.text.slice(0,20); }
-
+ 
   function pickQuote(pool, lastKey){
     const usage = loadUsage();
     let candidates = pool.filter(q => (usage[quoteKey(q)]||0) < MAX_USES && quoteKey(q) !== lastKey);
@@ -611,9 +708,9 @@
     saveUsage(usage);
     return chosen;
   }
-
+ 
   /* ---------------- Navigation ---------------- */
-
+ 
   const navBtns = document.querySelectorAll(".nav-btn");
   navBtns.forEach(btn => {
     btn.addEventListener("click", () => {
@@ -624,9 +721,9 @@
       if(btn.dataset.view === "dashboard") renderDashboard();
     });
   });
-
+ 
   /* ---------------- Mode selection ---------------- */
-
+ 
   let selectedMode = 30;
   const modeBtns = document.querySelectorAll(".mode-btn");
   modeBtns.forEach(btn => {
@@ -636,9 +733,9 @@
       selectedMode = parseInt(btn.dataset.mode, 10);
     });
   });
-
+ 
   /* ---------------- Typing session state ---------------- */
-
+ 
   const els = {
     preSession: document.getElementById("pre-session"),
     startBtn: document.getElementById("start-btn"),
@@ -657,20 +754,21 @@
     resIncorrect: document.getElementById("res-incorrect"),
     resTime: document.getElementById("res-time"),
     passagesList: document.getElementById("passages-list"),
-    againBtn: document.getElementById("again-btn")
+    againBtn: document.getElementById("again-btn"),
+    hiddenInput: document.getElementById("hidden-input")
   };
-
+ 
   let session = null;
-
+ 
   function formatTime(sec){
     const m = Math.floor(sec/60);
     const s = Math.floor(sec%60);
     return m + ":" + String(s).padStart(2,"0");
   }
-
+ 
   function startSession(){
     const pool = selectedMode === 30 ? shortQuotes : selectedMode === 60 ? mediumQuotes : longQuotes;
-
+ 
     session = {
       duration: selectedMode,
       remaining: selectedMode,
@@ -687,32 +785,37 @@
       timerId: null,
       ended: false
     };
-
+ 
     els.preSession.style.display = "none";
     els.resultsWrap.classList.remove("show");
     els.sessionBar.classList.add("show");
     els.idleNote.style.display = "none";
     els.quoteText.style.display = "block";
     els.stageHint.style.display = "block";
-
+ 
     loadNextQuote();
     updateLiveStats();
-
+ 
     els.liveTime.textContent = formatTime(session.remaining);
-
+ 
     session.timerId = setInterval(tick, 200);
-    document.addEventListener("keydown", handleKeydown);
+    els.hiddenInput.value = "";
+    els.hiddenInput.focus();
   }
-
+ 
   function loadNextQuote(){
     const q = pickQuote(session.pool, session.lastKey);
     session.currentQuote = q;
     session.lastKey = quoteKey(q);
     session.charIndex = 0;
     session.charStates = new Array(q.text.length).fill("pending");
+    session.everWrong = new Array(q.text.length).fill(false);
+    els.hiddenInput.value = "";
+    els.hiddenInput.maxLength = q.text.length;
     renderQuote();
+    if(document.activeElement !== els.hiddenInput) els.hiddenInput.focus();
   }
-
+ 
   function renderQuote(){
     const text = session.currentQuote.text;
     let html = "";
@@ -726,11 +829,11 @@
     }
     els.quoteText.innerHTML = html;
   }
-
+ 
   function escapeHtml(ch){
     return ch.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
   }
-
+ 
   function countIncorrectWords(text, states){
     let count = 0;
     let i = 0;
@@ -749,56 +852,72 @@
     }
     return count;
   }
-
-  function handleKeydown(e){
-    if(!session || session.ended) return;
-    if(e.key === "Backspace"){
-      e.preventDefault();
-      if(session.charIndex > 0){
-        session.charIndex--;
-        session.charStates[session.charIndex] = "pending";
-        renderQuote();
+ 
+  function liveCounts(){
+    let extraCorrect = 0, extraIncorrect = 0;
+    if(session.currentQuote){
+      const upto = Math.min(els.hiddenInput.value.length, session.currentQuote.text.length);
+      for(let i=0;i<upto;i++){
+        if(session.everWrong[i]) extraIncorrect++; else extraCorrect++;
       }
-      return;
     }
-    if(e.key.length !== 1) return; // ignore control keys
-    e.preventDefault();
-
+    return { correct: session.correctTotal + extraCorrect, incorrect: session.incorrectTotal + extraIncorrect };
+  }
+ 
+  function handleInput(){
+    if(!session || session.ended) return;
+ 
     const text = session.currentQuote.text;
-    if(session.charIndex >= text.length) return;
-
-    const expected = text[session.charIndex];
-    if(e.key === expected){
-      session.charStates[session.charIndex] = "correct";
-      session.correctTotal++;
-    } else {
-      session.charStates[session.charIndex] = "incorrect";
-      session.incorrectTotal++;
+    const value = els.hiddenInput.value;
+ 
+    for(let i=0;i<text.length;i++){
+      if(i < value.length){
+        const isCorrect = value[i] === text[i];
+        session.charStates[i] = isCorrect ? "correct" : "incorrect";
+        if(!isCorrect) session.everWrong[i] = true;
+      } else {
+        session.charStates[i] = "pending";
+      }
     }
-    session.charIndex++;
+    session.charIndex = Math.min(value.length, text.length);
     renderQuote();
     updateLiveStats();
-
-    if(session.charIndex >= text.length){
+ 
+    if(value.length >= text.length){
+      let correctCount = 0, incorrectCount = 0;
+      for(let i=0;i<text.length;i++){
+        if(session.everWrong[i]) incorrectCount++; else correctCount++;
+      }
+      session.correctTotal += correctCount;
+      session.incorrectTotal += incorrectCount;
       session.incorrectWordsTotal += countIncorrectWords(text, session.charStates);
       session.completed.push(session.currentQuote);
       loadNextQuote();
     }
   }
-
+ 
+  els.hiddenInput.addEventListener("input", handleInput);
+ 
+  function refocusInput(){
+    if(session && !session.ended) els.hiddenInput.focus();
+  }
+  els.stage.addEventListener("click", refocusInput);
+  els.stage.addEventListener("touchend", refocusInput);
+ 
   function updateLiveStats(){
     const elapsedMin = Math.max((session.duration - session.remaining), 1) / 60;
-    const wpm = Math.round((session.correctTotal/5) / elapsedMin);
-    const totalTyped = session.correctTotal + session.incorrectTotal;
-    const acc = totalTyped === 0 ? 100 : Math.round((session.correctTotal/totalTyped)*100);
+    const counts = liveCounts();
+    const wpm = Math.round((counts.correct/5) / elapsedMin);
+    const totalTyped = counts.correct + counts.incorrect;
+    const acc = totalTyped === 0 ? 100 : Math.round((counts.correct/totalTyped)*100);
     els.liveWpm.textContent = isFinite(wpm) ? Math.max(wpm,0) : 0;
     els.liveAcc.textContent = acc + "%";
-
+ 
     const progress = 1 - (session.remaining / session.duration);
     const radius = Math.min(75, Math.max(0, progress*75));
     els.moonFill.style.clipPath = "circle(" + radius + "% at 50% 50%)";
   }
-
+ 
   function tick(){
     session.remaining -= 0.2;
     if(session.remaining <= 0){
@@ -811,58 +930,72 @@
     els.liveTime.textContent = formatTime(session.remaining);
     updateLiveStats();
   }
-
+ 
   function endSession(){
     if(session.ended) return;
     session.ended = true;
     clearInterval(session.timerId);
-    document.removeEventListener("keydown", handleKeydown);
-
-    // if current quote partially typed, tally its incorrect words too, though it doesn't count as completed
-    session.incorrectWordsTotal += countIncorrectWords(session.currentQuote.text, session.charStates);
-
+    els.hiddenInput.blur();
+ 
+    // commit whatever was typed of the in-progress (uncompleted) quote
+    const text = session.currentQuote.text;
+    const typedLen = Math.min(els.hiddenInput.value.length, text.length);
+    for(let i=0;i<typedLen;i++){
+      if(session.everWrong[i]) session.incorrectTotal++; else session.correctTotal++;
+    }
+    session.incorrectWordsTotal += countIncorrectWords(text, session.charStates);
+ 
     const elapsedMin = session.duration/60;
     const wpm = Math.max(Math.round((session.correctTotal/5) / elapsedMin), 0);
     const totalTyped = session.correctTotal + session.incorrectTotal;
     const acc = totalTyped === 0 ? 100 : Math.round((session.correctTotal/totalTyped)*100);
-
+ 
+    // Build the full list of passages shown this session: every completed quote,
+    // plus whatever quote was still on screen if the person had started typing it
+    const passageList = session.completed.slice();
+    if(els.hiddenInput.value.length > 0){
+      passageList.push(session.currentQuote);
+    }
+ 
     // Save session
     const sessions = loadSessions();
     sessions.unshift({
+      id: Date.now() + "_" + Math.random().toString(36).slice(2,8),
       date: new Date().toISOString(),
       mode: session.duration,
       wpm: wpm,
-      accuracy: acc
+      accuracy: acc,
+      incorrectWords: session.incorrectWordsTotal,
+      passages: passageList.map(q => ({ author: q.author, text: q.text }))
     });
     saveSessions(sessions.slice(0,200));
-
-    showResults(wpm, acc, session.incorrectWordsTotal);
+ 
+    showResults(wpm, acc, session.incorrectWordsTotal, passageList);
   }
-
-  function showResults(wpm, acc, incorrectWords){
+ 
+  function showResults(wpm, acc, incorrectWords, passageList){
     els.sessionBar.classList.remove("show");
     els.stage.style.display = "none";
-
+ 
     els.resWpm.textContent = wpm;
     els.resAcc.textContent = acc + "%";
     els.resIncorrect.textContent = incorrectWords;
     const durationLabel = session.duration === 30 ? "30s" : session.duration === 60 ? "1 min" : "5 min";
     els.resTime.textContent = durationLabel;
-
+ 
     els.passagesList.innerHTML = "";
-    const list = session.completed.length ? session.completed : [session.currentQuote];
-    list.forEach(q => {
+    passageList.forEach(q => {
       const card = document.createElement("div");
       card.className = "passage-card";
       card.innerHTML = "<div class='passage-quote'>\u201C" + escapeHtml(q.text) + "\u201D</div><div class='passage-author'>\u2014 " + escapeHtml(q.author) + "</div>";
       els.passagesList.appendChild(card);
     });
-
+ 
     els.resultsWrap.classList.add("show");
   }
-
+ 
   els.startBtn.addEventListener("click", startSession);
-
+ 
   els.againBtn.addEventListener("click", () => {
     els.resultsWrap.classList.remove("show");
     els.stage.style.display = "flex";
@@ -872,26 +1005,26 @@
     els.preSession.style.display = "block";
     els.moonFill.style.clipPath = "circle(0% at 50% 50%)";
   });
-
+ 
   /* ---------------- Dashboard ---------------- */
-
+ 
   function renderDashboard(){
     const sessions = loadSessions();
     const bestWpm = sessions.reduce((m,s)=>Math.max(m,s.wpm),0);
     const avgWpm = sessions.length ? Math.round(sessions.reduce((a,s)=>a+s.wpm,0)/sessions.length) : 0;
     const avgAcc = sessions.length ? Math.round(sessions.reduce((a,s)=>a+s.accuracy,0)/sessions.length) : 0;
-
+ 
     document.getElementById("dash-best").textContent = bestWpm;
     document.getElementById("dash-avg").textContent = avgWpm;
     document.getElementById("dash-sessions").textContent = sessions.length;
     document.getElementById("dash-accuracy").textContent = avgAcc + "%";
-
+ 
     const historyEl = document.getElementById("history-list");
     if(sessions.length === 0){
       historyEl.innerHTML = "<div class='empty-state'>Nothing here yet — your sessions will show up once you start typing.</div>";
       return;
     }
-
+ 
     historyEl.innerHTML = "";
     sessions.slice(0,12).forEach(s => {
       const row = document.createElement("div");
@@ -903,14 +1036,60 @@
         "<span class='mode-tag'>" + modeLabel + "</span>" +
         "<span class='h-metrics'><span>" + s.wpm + " wpm</span><span>" + s.accuracy + "% acc</span></span>" +
         "<span class='h-date'>" + dateLabel + "</span>";
+      row.addEventListener("click", () => openSessionModal(s));
       historyEl.appendChild(row);
     });
   }
-
+ 
+  /* ---------------- Session detail modal ---------------- */
+ 
+  const modal = document.getElementById("session-modal");
+  const modalEls = {
+    mode: document.getElementById("modal-mode"),
+    date: document.getElementById("modal-date"),
+    wpm: document.getElementById("modal-wpm"),
+    acc: document.getElementById("modal-acc"),
+    incorrect: document.getElementById("modal-incorrect"),
+    passages: document.getElementById("modal-passages")
+  };
+ 
+  function openSessionModal(s){
+    const modeLabel = s.mode === 30 ? "30s" : s.mode === 60 ? "1 min" : "5 min";
+    const d = new Date(s.date);
+    modalEls.mode.textContent = modeLabel;
+    modalEls.date.textContent = d.toLocaleDateString(undefined, { month:"long", day:"numeric", year:"numeric" }) + " · " + d.toLocaleTimeString(undefined, {hour:"2-digit", minute:"2-digit"});
+    modalEls.wpm.textContent = s.wpm;
+    modalEls.acc.textContent = s.accuracy + "%";
+    modalEls.incorrect.textContent = (typeof s.incorrectWords === "number") ? s.incorrectWords : "—";
+ 
+    modalEls.passages.innerHTML = "";
+    const passages = s.passages && s.passages.length ? s.passages : null;
+    if(!passages){
+      modalEls.passages.innerHTML = "<div class='empty-state'>This session was saved before passage history was tracked, so its text isn't available.</div>";
+    } else {
+      passages.forEach(q => {
+        const card = document.createElement("div");
+        card.className = "passage-card";
+        card.innerHTML = "<div class='passage-quote'>\u201C" + escapeHtml(q.text) + "\u201D</div><div class='passage-author'>\u2014 " + escapeHtml(q.author) + "</div>";
+        modalEls.passages.appendChild(card);
+      });
+    }
+ 
+    modal.classList.add("show");
+  }
+ 
+  function closeSessionModal(){
+    modal.classList.remove("show");
+  }
+ 
+  document.getElementById("modal-close").addEventListener("click", closeSessionModal);
+  modal.addEventListener("click", (e) => { if(e.target === modal) closeSessionModal(); });
+  document.addEventListener("keydown", (e) => { if(e.key === "Escape") closeSessionModal(); });
+ 
   const resetBtn = document.getElementById("reset-btn");
   let resetArmed = false;
   let resetArmTimeout = null;
-
+ 
   resetBtn.addEventListener("click", () => {
     if(!resetArmed){
       resetArmed = true;
@@ -923,7 +1102,7 @@
       }, 4000);
       return;
     }
-
+ 
     clearTimeout(resetArmTimeout);
     resetArmed = false;
     localStorage.removeItem(STORAGE_KEY);
@@ -933,11 +1112,12 @@
     renderDashboard();
     setTimeout(() => { resetBtn.textContent = "Clear my saved progress"; }, 2000);
   });
-
+ 
   renderDashboard();
-
+ 
 })();
 </script>
-
+ 
 </body>
 </html>
+ 
