@@ -1,0 +1,942 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Stillness — Type with the Philosophers</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400;1,6..72,500&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg-top:#EEF3FA;
+    --bg-bottom:#E1EAF4;
+    --ink:#1C2B3A;
+    --ink-soft:#4B5C6E;
+    --muted:#93A6B9;
+    --muted-2:#C4D0DD;
+    --accent:#5A7FB5;
+    --accent-deep:#2F4A73;
+    --correct:#3E6B5A;
+    --error:#B15550;
+    --card:rgba(255,255,255,0.62);
+    --card-border:rgba(255,255,255,0.9);
+    --shadow: 0 20px 60px -25px rgba(28,43,58,0.25);
+  }
+
+  *{box-sizing:border-box; margin:0; padding:0;}
+
+  html,body{height:100%;}
+
+  body{
+    font-family:'Inter', sans-serif;
+    color:var(--ink);
+    background:
+      radial-gradient(ellipse 80% 50% at 50% -10%, #F7FAFD 0%, transparent 60%),
+      linear-gradient(180deg, var(--bg-top) 0%, var(--bg-bottom) 100%);
+    min-height:100vh;
+    -webkit-font-smoothing:antialiased;
+    display:flex;
+    flex-direction:column;
+  }
+
+  ::selection{ background: var(--accent); color:#fff; }
+
+  a{ color:inherit; }
+
+  /* ---------- Header ---------- */
+  header{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:32px 56px;
+    max-width:1200px;
+    margin:0 auto;
+    width:100%;
+  }
+
+  .brand{
+    display:flex;
+    align-items:center;
+    gap:12px;
+  }
+
+  .brand-mark{
+    width:22px; height:22px; border-radius:50%;
+    background: radial-gradient(circle at 35% 30%, #ffffff, var(--accent) 70%);
+    box-shadow: 0 0 18px rgba(90,127,181,0.55);
+  }
+
+  .brand-name{
+    font-family:'Newsreader', serif;
+    font-style:italic;
+    font-weight:500;
+    font-size:22px;
+    letter-spacing:0.01em;
+  }
+
+  nav{ display:flex; gap:8px; }
+
+  .nav-btn{
+    font-family:'Inter', sans-serif;
+    font-size:14px;
+    font-weight:500;
+    color:var(--ink-soft);
+    background:transparent;
+    border:none;
+    padding:10px 18px;
+    border-radius:999px;
+    cursor:pointer;
+    transition: all .25s ease;
+    letter-spacing:0.01em;
+  }
+  .nav-btn:hover{ color:var(--ink); background:rgba(255,255,255,0.5); }
+  .nav-btn.active{ color:#fff; background:var(--accent-deep); box-shadow: var(--shadow); }
+
+  main{
+    flex:1;
+    max-width:1200px;
+    margin:0 auto;
+    width:100%;
+    padding:20px 56px 100px;
+  }
+
+  .view{ display:none; animation: fadeIn .5s ease; }
+  .view.active{ display:block; }
+
+  @keyframes fadeIn{ from{ opacity:0; transform:translateY(8px);} to{opacity:1; transform:translateY(0);} }
+
+  /* ---------- Type View ---------- */
+
+  .hero-line{
+    text-align:center;
+    font-family:'Newsreader', serif;
+    font-style:italic;
+    font-weight:400;
+    font-size:17px;
+    color:var(--ink-soft);
+    max-width:520px;
+    margin:8px auto 40px;
+    line-height:1.6;
+  }
+
+  .controls{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:14px;
+    margin-bottom:56px;
+    flex-wrap:wrap;
+  }
+
+  .mode-group{
+    display:flex;
+    background:var(--card);
+    border:1px solid var(--card-border);
+    border-radius:999px;
+    padding:5px;
+    box-shadow: var(--shadow);
+    backdrop-filter: blur(12px);
+  }
+
+  .mode-btn{
+    border:none;
+    background:transparent;
+    font-family:'Inter', sans-serif;
+    font-size:14px;
+    font-weight:600;
+    color:var(--ink-soft);
+    padding:11px 22px;
+    border-radius:999px;
+    cursor:pointer;
+    transition: all .25s ease;
+  }
+  .mode-btn.selected{ background:var(--accent-deep); color:#fff; }
+  .mode-btn:hover:not(.selected){ color:var(--ink); }
+
+  .start-btn{
+    font-family:'Inter', sans-serif;
+    font-weight:600;
+    font-size:14px;
+    color:#fff;
+    background:linear-gradient(135deg, var(--accent) 0%, var(--accent-deep) 100%);
+    border:none;
+    padding:13px 30px;
+    border-radius:999px;
+    cursor:pointer;
+    box-shadow: 0 12px 30px -12px rgba(47,74,115,0.55);
+    transition: transform .2s ease, box-shadow .2s ease;
+    letter-spacing:0.01em;
+  }
+  .start-btn:hover{ transform:translateY(-1px); box-shadow: 0 16px 34px -12px rgba(47,74,115,0.65); }
+  .start-btn:active{ transform:translateY(0); }
+
+  /* Moon progress + live stats */
+  .session-bar{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:36px;
+    margin-bottom:44px;
+    opacity:0;
+    height:0;
+    overflow:hidden;
+    transition: opacity .4s ease;
+  }
+  .session-bar.show{ opacity:1; height:auto; overflow:visible; margin-bottom:44px; }
+
+  .moon{
+    width:46px; height:46px;
+    border-radius:50%;
+    position:relative;
+    background: linear-gradient(160deg, #263B52 0%, #14202E 100%);
+    box-shadow: inset 0 0 8px rgba(0,0,0,0.4), 0 0 22px rgba(90,127,181,0.35);
+    overflow:hidden;
+    flex-shrink:0;
+  }
+  .moon-fill{
+    position:absolute; inset:0;
+    background: radial-gradient(circle at 35% 30%, #FFFFFF 0%, #DCE7F5 60%, #B9CBE0 100%);
+    clip-path: circle(0% at 50% 50%);
+    transition: clip-path .3s linear;
+  }
+
+  .live-stats{
+    display:flex;
+    gap:28px;
+    font-family:'Inter', sans-serif;
+  }
+  .live-stat{ text-align:center; }
+  .live-stat .num{ font-size:22px; font-weight:700; color:var(--ink); font-variant-numeric: tabular-nums; }
+  .live-stat .lbl{ font-size:11px; text-transform:uppercase; letter-spacing:0.08em; color:var(--muted); margin-top:2px; }
+
+  /* Typing stage */
+  .stage{
+    background:var(--card);
+    border:1px solid var(--card-border);
+    border-radius:28px;
+    padding:64px 72px;
+    box-shadow: var(--shadow);
+    backdrop-filter: blur(16px);
+    min-height:220px;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    position:relative;
+    overflow:hidden;
+  }
+
+  .quote-text{
+    font-family:'Newsreader', serif;
+    font-size:29px;
+    line-height:1.75;
+    text-align:center;
+    max-width:780px;
+    width:100%;
+    min-width:0;
+    letter-spacing:0.005em;
+    word-wrap:break-word;
+    overflow-wrap:break-word;
+  }
+
+  .quote-text span{ transition: color .08s ease; }
+  .char-pending{ color:var(--muted-2); }
+  .char-correct{ color:var(--ink); }
+  .char-incorrect{ color:var(--error); text-decoration: underline; text-decoration-color: rgba(177,85,80,0.5); }
+  .char-current{ position:relative; }
+  .char-current::before{
+    content:'';
+    position:absolute;
+    left:-1px; top:2px; bottom:2px;
+    width:2px;
+    background:var(--accent);
+    animation: blink 1s step-end infinite;
+  }
+  @keyframes blink{ 50%{ opacity:0; } }
+
+  .stage-hint{
+    position:absolute;
+    bottom:20px;
+    font-size:12px;
+    color:var(--muted);
+    letter-spacing:0.02em;
+  }
+
+  .idle-note{
+    font-family:'Inter', sans-serif;
+    font-size:14px;
+    color:var(--muted);
+    text-align:center;
+  }
+
+  /* ---------- Results ---------- */
+  .results-wrap{ display:none; }
+  .results-wrap.show{ display:block; animation: fadeIn .5s ease; }
+
+  .results-stats{
+    display:grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap:16px;
+    max-width:760px;
+    margin:0 auto 48px;
+  }
+
+  .stat-card{
+    background:var(--card);
+    border:1px solid var(--card-border);
+    border-radius:20px;
+    padding:26px 20px;
+    text-align:center;
+    box-shadow: var(--shadow);
+    backdrop-filter: blur(12px);
+  }
+  .stat-card .num{ font-family:'Newsreader', serif; font-size:38px; font-weight:500; color:var(--accent-deep); }
+  .stat-card .lbl{ margin-top:6px; font-size:12px; text-transform:uppercase; letter-spacing:0.08em; color:var(--muted); }
+
+  .passages-heading{
+    text-align:center;
+    font-size:12px;
+    text-transform:uppercase;
+    letter-spacing:0.12em;
+    color:var(--muted);
+    margin-bottom:22px;
+  }
+
+  .passage-card{
+    max-width:680px;
+    margin:0 auto 18px;
+    background:var(--card);
+    border:1px solid var(--card-border);
+    border-radius:20px;
+    padding:28px 34px;
+    box-shadow: var(--shadow);
+    backdrop-filter: blur(12px);
+  }
+  .passage-quote{
+    font-family:'Newsreader', serif;
+    font-style:italic;
+    font-size:18px;
+    line-height:1.65;
+    color:var(--ink);
+  }
+  .passage-author{
+    margin-top:12px;
+    font-size:13px;
+    font-weight:600;
+    color:var(--accent-deep);
+    letter-spacing:0.02em;
+  }
+
+  .results-actions{
+    display:flex;
+    justify-content:center;
+    margin-top:40px;
+  }
+
+  /* ---------- Dashboard ---------- */
+  .dash-grid{
+    display:grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap:18px;
+    margin-bottom:52px;
+  }
+
+  .dash-card{
+    background:var(--card);
+    border:1px solid var(--card-border);
+    border-radius:20px;
+    padding:30px 22px;
+    text-align:center;
+    box-shadow: var(--shadow);
+    backdrop-filter: blur(12px);
+  }
+  .dash-card .num{ font-family:'Newsreader', serif; font-size:40px; font-weight:500; color:var(--accent-deep); font-variant-numeric: tabular-nums; }
+  .dash-card .lbl{ margin-top:8px; font-size:12px; text-transform:uppercase; letter-spacing:0.08em; color:var(--muted); }
+
+  .history-heading{
+    font-size:12px;
+    text-transform:uppercase;
+    letter-spacing:0.12em;
+    color:var(--muted);
+    margin-bottom:18px;
+  }
+
+  .history-list{
+    background:var(--card);
+    border:1px solid var(--card-border);
+    border-radius:20px;
+    box-shadow: var(--shadow);
+    backdrop-filter: blur(12px);
+    overflow:hidden;
+  }
+  .history-row{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:16px 28px;
+    border-bottom:1px solid rgba(28,43,58,0.06);
+    font-size:14px;
+  }
+  .history-row:last-child{ border-bottom:none; }
+  .history-row .mode-tag{
+    font-size:11px;
+    font-weight:600;
+    color:var(--accent-deep);
+    background:rgba(90,127,181,0.12);
+    padding:4px 10px;
+    border-radius:999px;
+    letter-spacing:0.02em;
+  }
+  .history-row .h-metrics{ display:flex; gap:22px; color:var(--ink-soft); }
+  .history-row .h-date{ color:var(--muted); font-size:12px; }
+
+  .empty-state{
+    text-align:center;
+    padding:60px 20px;
+    color:var(--muted);
+    font-size:14px;
+  }
+
+  .reset-row{
+    text-align:center;
+    margin-top:40px;
+  }
+  .reset-link{
+    font-size:12px;
+    color:var(--muted);
+    background:none;
+    border:none;
+    cursor:pointer;
+    text-decoration:underline;
+    letter-spacing:0.02em;
+  }
+  .reset-link:hover{ color:var(--error); }
+
+  footer{
+    text-align:center;
+    padding:30px;
+    font-size:12px;
+    color:var(--muted);
+    letter-spacing:0.02em;
+  }
+
+  @media (max-width: 720px){
+    header{ padding:24px 22px; flex-direction:column; gap:16px; }
+    main{ padding:10px 22px 80px; }
+    .stage{ padding:44px 26px; }
+    .quote-text{ font-size:22px; }
+    .results-stats{ grid-template-columns: repeat(2,1fr); gap:10px; }
+    .dash-grid{ grid-template-columns: repeat(2,1fr); }
+    .stat-card .num, .dash-card .num{ font-size:28px; }
+    .passage-card{ padding:22px 20px; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="brand">
+    <span class="brand-mark"></span>
+    <span class="brand-name">Stillness</span>
+  </div>
+  <nav>
+    <button class="nav-btn active" data-view="type">Type</button>
+    <button class="nav-btn" data-view="dashboard">Dashboard</button>
+  </nav>
+</header>
+
+<main>
+
+  <!-- TYPE VIEW -->
+  <section class="view active" id="view-type">
+
+    <div id="pre-session">
+      <p class="hero-line">Borrow a little stillness from those who thought before you. Choose your time, and begin.</p>
+
+      <div class="controls">
+        <div class="mode-group" id="mode-group">
+          <button class="mode-btn selected" data-mode="30">30s</button>
+          <button class="mode-btn" data-mode="60">1 min</button>
+          <button class="mode-btn" data-mode="300">5 min</button>
+        </div>
+        <button class="start-btn" id="start-btn">Begin typing</button>
+      </div>
+    </div>
+
+    <div class="session-bar" id="session-bar">
+      <div class="moon"><div class="moon-fill" id="moon-fill"></div></div>
+      <div class="live-stats">
+        <div class="live-stat"><div class="num" id="live-time">0:30</div><div class="lbl">Time</div></div>
+        <div class="live-stat"><div class="num" id="live-wpm">0</div><div class="lbl">WPM</div></div>
+        <div class="live-stat"><div class="num" id="live-acc">100%</div><div class="lbl">Accuracy</div></div>
+      </div>
+    </div>
+
+    <div class="stage" id="stage">
+      <div class="idle-note" id="idle-note">Your passage will appear here once you begin. Just start typing — no need to click anything first.</div>
+      <div class="quote-text" id="quote-text" style="display:none;"></div>
+      <div class="stage-hint" id="stage-hint" style="display:none;">Backspace to correct a mistake</div>
+    </div>
+
+    <!-- RESULTS -->
+    <div class="results-wrap" id="results-wrap">
+      <div class="results-stats">
+        <div class="stat-card"><div class="num" id="res-wpm">0</div><div class="lbl">Words / min</div></div>
+        <div class="stat-card"><div class="num" id="res-acc">0%</div><div class="lbl">Accuracy</div></div>
+        <div class="stat-card"><div class="num" id="res-incorrect">0</div><div class="lbl">Incorrect words</div></div>
+        <div class="stat-card"><div class="num" id="res-time">0</div><div class="lbl">Time</div></div>
+      </div>
+
+      <div class="passages-heading">Passages you practiced</div>
+      <div id="passages-list"></div>
+
+      <div class="results-actions">
+        <button class="start-btn" id="again-btn">Type again</button>
+      </div>
+    </div>
+
+  </section>
+
+  <!-- DASHBOARD VIEW -->
+  <section class="view" id="view-dashboard">
+    <div class="dash-grid">
+      <div class="dash-card"><div class="num" id="dash-best">0</div><div class="lbl">Best WPM</div></div>
+      <div class="dash-card"><div class="num" id="dash-avg">0</div><div class="lbl">Average WPM</div></div>
+      <div class="dash-card"><div class="num" id="dash-sessions">0</div><div class="lbl">Sessions</div></div>
+      <div class="dash-card"><div class="num" id="dash-accuracy">0%</div><div class="lbl">Average accuracy</div></div>
+    </div>
+
+    <div class="history-heading">Recent sessions</div>
+    <div class="history-list" id="history-list">
+      <div class="empty-state">Nothing here yet — your sessions will show up once you start typing.</div>
+    </div>
+
+    <div class="reset-row">
+      <button class="reset-link" id="reset-btn">Clear my saved progress</button>
+    </div>
+  </section>
+
+</main>
+
+<footer>Stillness · practice typing, one thought at a time</footer>
+
+<script>
+(function(){
+
+  /* ---------------- Content pools ---------------- */
+
+  const mediumQuotes = [
+    { author: "Ashtavakra", text: "You are not the body, nor is the body yours to claim. You are neither the doer of any action nor the one who tastes its fruit. You are pure, silent awareness itself, the quiet witness watching every thought and feeling rise and fall without ever being touched by them." },
+    { author: "Ashtavakra", text: "Only one thing truly binds a person, and that is the endless craving for pleasure. The moment that craving loosens its grip, freedom is no longer something distant to search for, because it was quietly present all along, waiting beneath the noise of desire." },
+    { author: "Buddha", text: "What we think, in time, we slowly become. Every experience we call our own begins first as a passing thought, and with our thoughts, gently and without our noticing, we shape the entire world we later walk through and call real." },
+    { author: "Buddha", text: "Holding onto anger for very long is much like drinking poison yourself while quietly expecting somebody else, somewhere far away, to be the one who eventually suffers for it. Let it go, and notice how quickly the mind settles into stillness again." },
+    { author: "Buddha", text: "Peace is never something to be hunted for out in the world, because nothing external was ever built to hand it to you. It waits patiently within, ready the instant you stop searching everywhere else and finally turn your attention inward." },
+    { author: "Socrates", text: "An unexamined life, lived without ever questioning your own beliefs, is hardly worth living at all, for such a person merely repeats whatever opinions happen to be handed down to them, mistaking borrowed thoughts for wisdom they never earned themselves." },
+    { author: "Socrates", text: "I know that I know nothing certain, and strangely enough, it is exactly this honest admission that makes me a little wiser than those who walk through life assuming, quite comfortably, that they already understand everything worth understanding." },
+    { author: "Socrates", text: "Be, in quiet and ordinary ways, as you wish others to eventually see you, because the strongest reputation is never announced loudly. It is built slowly, almost invisibly, through many small honest choices repeated across many unremarkable days." },
+    { author: "Plato", text: "The beginning is always the most important part of any undertaking, because whatever is learned first tends to sink the deepest, quietly shaping the habits, instincts, and character that will define everything a person goes on to do." },
+    { author: "Plato", text: "Wise people generally speak only because they have something worth saying, carefully chosen and considered. Fools, on the other hand, speak simply because they cannot bear the discomfort of silence, filling it with whatever comes first to mind." },
+    { author: "Aristotle", text: "We become what we repeatedly do, day after ordinary day, without much fanfare. Excellence, then, was never a single dramatic act performed once, but a quiet habit built slowly, almost invisibly, through years of small consistent choices." },
+    { author: "Aristotle", text: "Knowing yourself honestly is the true beginning of all wisdom, because a person who cannot clearly see their own nature will inevitably misjudge nearly everything else they encounter, from other people to the world itself." }
+  ];
+
+  const longQuotes = [
+    { author: "Ashtavakra", text: "You are not this body, and the body was never truly yours to keep. You are neither the one performing any action, nor the one who later enjoys or suffers its results, no matter how convincing that feeling seems in the moment. Beneath every role you play, every name you carry, and every emotion that rises and eventually fades, there remains something unchanged and untouched: a quiet, silent awareness simply watching it all unfold. Most people spend their whole lives searching for peace outside themselves, chasing one desire after another, never realizing that the very thing they seek is the awareness doing the seeking. Rest there, and everything else quietly settles on its own." },
+    { author: "Ashtavakra", text: "Only one thing truly binds a person to suffering, and that is the endless, restless craving for pleasure, chased again and again without ever being fully satisfied. The moment that craving finally loosens its grip, even slightly, freedom stops being some distant destination to search for far away. It was quietly present the entire time, waiting patiently beneath the noise and clutter of desire, unnoticed simply because attention was always pointed elsewhere. To rest in that quiet presence, even briefly, is to discover that nothing was ever truly missing, and nothing ever needed to be added, no matter how convincingly the mind insisted otherwise." },
+    { author: "Buddha", text: "What we think, we slowly become, though the process is so gradual that most people never notice it happening within themselves. Every experience we call our own life begins first as a fleeting thought passing quietly through the mind, and with our thoughts, again and again, we quietly construct the entire world we later insist is fixed and real. Anger held too long becomes a poison we drink ourselves while waiting for someone far away to suffer for it instead. Peace was never something to be found out in the world, no matter how far a person travels searching. It waits patiently within, ready the moment we finally turn our attention inward instead." },
+    { author: "Buddha", text: "Peace, the Buddha taught, is never something to be hunted for out in the wide world, no matter how far a person travels or how much they acquire along the way. It was never built to be handed over by anything external, however comforting that idea might feel in a difficult moment. It waits patiently within, quiet and unclaimed, ready the very instant a person stops searching everywhere else and finally turns their attention inward instead. This turning inward is rarely dramatic. It happens slowly, through ordinary stillness repeated often enough that the mind, so used to reaching outward, gradually learns another way of simply being." },
+    { author: "Socrates", text: "An unexamined life is hardly worth living, Socrates insisted, because a person who never pauses to question their own beliefs simply repeats whatever opinions happen to be handed down to them, generation after generation, mistaking familiarity for actual understanding. True wisdom, he argued, begins with an honest and sometimes uncomfortable admission: that we know far less than we assume we do. It is precisely this humility that separates the wise from the merely confident. Reputation, too, should never be chased loudly or performed for an audience. It is built quietly instead, almost invisibly, through countless small and ordinary choices repeated over many unremarkable days." },
+    { author: "Socrates", text: "I know that I know nothing certain, Socrates famously admitted, and strangely enough, it was exactly this honest confession that made him, in his own words, a little wiser than those who walked through life assuming, quite comfortably, that they already understood everything worth understanding. This was never meant as false modesty. It was a genuine starting point, an admission that opened the door to real questioning rather than closing it. Those who believe they have already arrived at understanding rarely think to ask another question, while those who admit their own uncertainty keep searching and keep quietly growing wiser with every honest conversation." },
+    { author: "Plato", text: "The beginning, Plato often reminded his students, is the most important part of any undertaking, for whatever is learned first tends to sink the deepest and quietly shapes the habits and character a person carries for the rest of their life. Wise people, he observed, generally speak only when they have something worth saying, weighing their words carefully before offering them. Fools, by contrast, speak simply because they cannot bear the discomfort of silence, filling empty space with whatever thought happens to arrive first. And at the touch of love, he wrote, everyone becomes something of a poet, because love quietly awakens a way of seeing that reason alone could never fully reach on its own." },
+    { author: "Plato", text: "Good people, Plato observed, do not need elaborate laws to tell them how to act responsibly toward others, because their own conscience already guides them toward fairness without being forced. Bad people, meanwhile, will always find some clever way around whatever laws are written, no matter how carefully worded or strictly enforced those laws might be. This is why character, quietly built over years, matters more in the end than any system of rules imposed from outside. A society full of honest, self-examined people needs far fewer laws than one that relies entirely on punishment and fear to keep its citizens in line." },
+    { author: "Aristotle", text: "We are, quite simply, what we repeatedly do, Aristotle argued, and excellence was therefore never meant to be a single dramatic act performed once and remembered forever. Instead, it is a quiet habit, built slowly and almost invisibly through years of small, consistent, and often unremarkable choices. Knowing oneself honestly, he believed, is the true beginning of all wisdom, since a person who cannot clearly see their own nature will inevitably misjudge nearly everything else they encounter in life. He also warned that educating the mind while neglecting the heart produces a person who may appear clever, yet remains, in every way that matters, fundamentally incomplete." },
+    { author: "Aristotle", text: "Aristotle believed that virtue was not something a person is simply born with, nor something that can be taught through words alone, but something built gradually through repeated action, much like a musician learns their instrument through years of daily, ordinary practice rather than a single burst of inspiration. A person becomes brave, he argued, by repeatedly performing brave acts, and becomes just by repeatedly acting justly, until eventually the behavior settles quietly into character itself. In this way, every small choice a person makes, however unremarkable it may seem in the moment, is quietly building the kind of person they are slowly becoming." }
+  ];
+
+  const shortQuotes = [
+    { author: "Franz Kafka", text: "Someone must have slandered him, for one morning, without having done anything wrong, he was arrested." },
+    { author: "Franz Kafka", text: "A cage went in search of a bird, and for a long moment neither one knew what to do with the other." },
+    { author: "Franz Kafka", text: "It is often safer to be in chains than to be free, for chains at least ask nothing of your courage." },
+    { author: "Franz Kafka", text: "He felt that he was losing control of things, losing hold of the past; his quiet life was slipping away." },
+    { author: "Franz Kafka", text: "There is infinite hope, but not for us, said the old man, and turned back toward the window." },
+    { author: "Fyodor Dostoevsky", text: "Above all, do not lie to yourself, for the man who lies to himself is often the first to take offense." },
+    { author: "Fyodor Dostoevsky", text: "Pain and suffering are always inevitable for a large intelligence and a deep heart, he thought, closing his eyes." },
+    { author: "Fyodor Dostoevsky", text: "The mystery of human existence lies not in staying alive, but in finding something worth living for." },
+    { author: "Fyodor Dostoevsky", text: "Man is a mystery that must be unraveled, and even a whole lifetime is not too long to spend on it." },
+    { author: "Fyodor Dostoevsky", text: "To go wrong in one's own way is better than to go right in someone else's, he muttered under his breath." },
+    { author: "Fyodor Dostoevsky", text: "Love a person even in their sin, for that faint reflection of love is a likeness of divine love itself." },
+    { author: "Franz Kafka", text: "In the fight between you and the world, hold the door open for the world, and let it teach you slowly." }
+  ];
+
+  /* ---------------- Storage ---------------- */
+
+  const STORAGE_KEY = "stillness_sessions_v1";
+  const USAGE_KEY = "stillness_usage_v1";
+  const MAX_USES = 3;
+
+  function loadSessions(){
+    try{ return JSON.parse(localStorage.getItem(STORAGE_KEY)) || []; }
+    catch(e){ return []; }
+  }
+  function saveSessions(list){
+    try{ localStorage.setItem(STORAGE_KEY, JSON.stringify(list)); }catch(e){}
+  }
+  function loadUsage(){
+    try{ return JSON.parse(localStorage.getItem(USAGE_KEY)) || {}; }
+    catch(e){ return {}; }
+  }
+  function saveUsage(u){
+    try{ localStorage.setItem(USAGE_KEY, JSON.stringify(u)); }catch(e){}
+  }
+
+  function quoteKey(q){ return q.author + "::" + q.text.slice(0,20); }
+
+  function pickQuote(pool, lastKey){
+    const usage = loadUsage();
+    let candidates = pool.filter(q => (usage[quoteKey(q)]||0) < MAX_USES && quoteKey(q) !== lastKey);
+    if(candidates.length === 0){
+      candidates = pool.filter(q => (usage[quoteKey(q)]||0) < MAX_USES);
+    }
+    if(candidates.length === 0){
+      // everything exhausted — reset usage for this pool
+      pool.forEach(q => { usage[quoteKey(q)] = 0; });
+      saveUsage(usage);
+      candidates = pool.filter(q => quoteKey(q) !== lastKey);
+      if(candidates.length === 0) candidates = pool.slice();
+    }
+    const chosen = candidates[Math.floor(Math.random()*candidates.length)];
+    usage[quoteKey(chosen)] = (usage[quoteKey(chosen)]||0) + 1;
+    saveUsage(usage);
+    return chosen;
+  }
+
+  /* ---------------- Navigation ---------------- */
+
+  const navBtns = document.querySelectorAll(".nav-btn");
+  navBtns.forEach(btn => {
+    btn.addEventListener("click", () => {
+      navBtns.forEach(b => b.classList.remove("active"));
+      btn.classList.add("active");
+      document.querySelectorAll(".view").forEach(v => v.classList.remove("active"));
+      document.getElementById("view-" + btn.dataset.view).classList.add("active");
+      if(btn.dataset.view === "dashboard") renderDashboard();
+    });
+  });
+
+  /* ---------------- Mode selection ---------------- */
+
+  let selectedMode = 30;
+  const modeBtns = document.querySelectorAll(".mode-btn");
+  modeBtns.forEach(btn => {
+    btn.addEventListener("click", () => {
+      modeBtns.forEach(b => b.classList.remove("selected"));
+      btn.classList.add("selected");
+      selectedMode = parseInt(btn.dataset.mode, 10);
+    });
+  });
+
+  /* ---------------- Typing session state ---------------- */
+
+  const els = {
+    preSession: document.getElementById("pre-session"),
+    startBtn: document.getElementById("start-btn"),
+    sessionBar: document.getElementById("session-bar"),
+    stage: document.getElementById("stage"),
+    idleNote: document.getElementById("idle-note"),
+    quoteText: document.getElementById("quote-text"),
+    stageHint: document.getElementById("stage-hint"),
+    liveTime: document.getElementById("live-time"),
+    liveWpm: document.getElementById("live-wpm"),
+    liveAcc: document.getElementById("live-acc"),
+    moonFill: document.getElementById("moon-fill"),
+    resultsWrap: document.getElementById("results-wrap"),
+    resWpm: document.getElementById("res-wpm"),
+    resAcc: document.getElementById("res-acc"),
+    resIncorrect: document.getElementById("res-incorrect"),
+    resTime: document.getElementById("res-time"),
+    passagesList: document.getElementById("passages-list"),
+    againBtn: document.getElementById("again-btn")
+  };
+
+  let session = null;
+
+  function formatTime(sec){
+    const m = Math.floor(sec/60);
+    const s = Math.floor(sec%60);
+    return m + ":" + String(s).padStart(2,"0");
+  }
+
+  function startSession(){
+    const pool = selectedMode === 30 ? shortQuotes : selectedMode === 60 ? mediumQuotes : longQuotes;
+
+    session = {
+      duration: selectedMode,
+      remaining: selectedMode,
+      pool: pool,
+      currentQuote: null,
+      lastKey: null,
+      charIndex: 0,
+      charStates: [],
+      correctTotal: 0,
+      incorrectTotal: 0,
+      incorrectWordsTotal: 0,
+      completed: [],
+      startedAt: Date.now(),
+      timerId: null,
+      ended: false
+    };
+
+    els.preSession.style.display = "none";
+    els.resultsWrap.classList.remove("show");
+    els.sessionBar.classList.add("show");
+    els.idleNote.style.display = "none";
+    els.quoteText.style.display = "block";
+    els.stageHint.style.display = "block";
+
+    loadNextQuote();
+    updateLiveStats();
+
+    els.liveTime.textContent = formatTime(session.remaining);
+
+    session.timerId = setInterval(tick, 200);
+    document.addEventListener("keydown", handleKeydown);
+  }
+
+  function loadNextQuote(){
+    const q = pickQuote(session.pool, session.lastKey);
+    session.currentQuote = q;
+    session.lastKey = quoteKey(q);
+    session.charIndex = 0;
+    session.charStates = new Array(q.text.length).fill("pending");
+    renderQuote();
+  }
+
+  function renderQuote(){
+    const text = session.currentQuote.text;
+    let html = "";
+    for(let i=0;i<text.length;i++){
+      let cls = "char-pending";
+      if(session.charStates[i] === "correct") cls = "char-correct";
+      else if(session.charStates[i] === "incorrect") cls = "char-incorrect";
+      if(i === session.charIndex) cls += " char-current";
+      const ch = text[i] === " " ? "&nbsp;" : escapeHtml(text[i]);
+      html += "<span class='" + cls + "'>" + ch + "</span>";
+    }
+    els.quoteText.innerHTML = html;
+  }
+
+  function escapeHtml(ch){
+    return ch.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+  }
+
+  function countIncorrectWords(text, states){
+    let count = 0;
+    let i = 0;
+    while(i < text.length){
+      if(text[i] === " "){ i++; continue; }
+      const start = i;
+      while(i < text.length && text[i] !== " ") i++;
+      const end = i;
+      let allTyped = true;
+      let hasIncorrect = false;
+      for(let j=start;j<end;j++){
+        if(states[j] === "pending") allTyped = false;
+        if(states[j] === "incorrect") hasIncorrect = true;
+      }
+      if(allTyped && hasIncorrect) count++;
+    }
+    return count;
+  }
+
+  function handleKeydown(e){
+    if(!session || session.ended) return;
+    if(e.key === "Backspace"){
+      e.preventDefault();
+      if(session.charIndex > 0){
+        session.charIndex--;
+        session.charStates[session.charIndex] = "pending";
+        renderQuote();
+      }
+      return;
+    }
+    if(e.key.length !== 1) return; // ignore control keys
+    e.preventDefault();
+
+    const text = session.currentQuote.text;
+    if(session.charIndex >= text.length) return;
+
+    const expected = text[session.charIndex];
+    if(e.key === expected){
+      session.charStates[session.charIndex] = "correct";
+      session.correctTotal++;
+    } else {
+      session.charStates[session.charIndex] = "incorrect";
+      session.incorrectTotal++;
+    }
+    session.charIndex++;
+    renderQuote();
+    updateLiveStats();
+
+    if(session.charIndex >= text.length){
+      session.incorrectWordsTotal += countIncorrectWords(text, session.charStates);
+      session.completed.push(session.currentQuote);
+      loadNextQuote();
+    }
+  }
+
+  function updateLiveStats(){
+    const elapsedMin = Math.max((session.duration - session.remaining), 1) / 60;
+    const wpm = Math.round((session.correctTotal/5) / elapsedMin);
+    const totalTyped = session.correctTotal + session.incorrectTotal;
+    const acc = totalTyped === 0 ? 100 : Math.round((session.correctTotal/totalTyped)*100);
+    els.liveWpm.textContent = isFinite(wpm) ? Math.max(wpm,0) : 0;
+    els.liveAcc.textContent = acc + "%";
+
+    const progress = 1 - (session.remaining / session.duration);
+    const radius = Math.min(75, Math.max(0, progress*75));
+    els.moonFill.style.clipPath = "circle(" + radius + "% at 50% 50%)";
+  }
+
+  function tick(){
+    session.remaining -= 0.2;
+    if(session.remaining <= 0){
+      session.remaining = 0;
+      els.liveTime.textContent = formatTime(0);
+      updateLiveStats();
+      endSession();
+      return;
+    }
+    els.liveTime.textContent = formatTime(session.remaining);
+    updateLiveStats();
+  }
+
+  function endSession(){
+    if(session.ended) return;
+    session.ended = true;
+    clearInterval(session.timerId);
+    document.removeEventListener("keydown", handleKeydown);
+
+    // if current quote partially typed, tally its incorrect words too, though it doesn't count as completed
+    session.incorrectWordsTotal += countIncorrectWords(session.currentQuote.text, session.charStates);
+
+    const elapsedMin = session.duration/60;
+    const wpm = Math.max(Math.round((session.correctTotal/5) / elapsedMin), 0);
+    const totalTyped = session.correctTotal + session.incorrectTotal;
+    const acc = totalTyped === 0 ? 100 : Math.round((session.correctTotal/totalTyped)*100);
+
+    // Save session
+    const sessions = loadSessions();
+    sessions.unshift({
+      date: new Date().toISOString(),
+      mode: session.duration,
+      wpm: wpm,
+      accuracy: acc
+    });
+    saveSessions(sessions.slice(0,200));
+
+    showResults(wpm, acc, session.incorrectWordsTotal);
+  }
+
+  function showResults(wpm, acc, incorrectWords){
+    els.sessionBar.classList.remove("show");
+    els.stage.style.display = "none";
+
+    els.resWpm.textContent = wpm;
+    els.resAcc.textContent = acc + "%";
+    els.resIncorrect.textContent = incorrectWords;
+    const durationLabel = session.duration === 30 ? "30s" : session.duration === 60 ? "1 min" : "5 min";
+    els.resTime.textContent = durationLabel;
+
+    els.passagesList.innerHTML = "";
+    const list = session.completed.length ? session.completed : [session.currentQuote];
+    list.forEach(q => {
+      const card = document.createElement("div");
+      card.className = "passage-card";
+      card.innerHTML = "<div class='passage-quote'>\u201C" + escapeHtml(q.text) + "\u201D</div><div class='passage-author'>\u2014 " + escapeHtml(q.author) + "</div>";
+      els.passagesList.appendChild(card);
+    });
+
+    els.resultsWrap.classList.add("show");
+  }
+
+  els.startBtn.addEventListener("click", startSession);
+
+  els.againBtn.addEventListener("click", () => {
+    els.resultsWrap.classList.remove("show");
+    els.stage.style.display = "flex";
+    els.quoteText.style.display = "none";
+    els.stageHint.style.display = "none";
+    els.idleNote.style.display = "block";
+    els.preSession.style.display = "block";
+    els.moonFill.style.clipPath = "circle(0% at 50% 50%)";
+  });
+
+  /* ---------------- Dashboard ---------------- */
+
+  function renderDashboard(){
+    const sessions = loadSessions();
+    const bestWpm = sessions.reduce((m,s)=>Math.max(m,s.wpm),0);
+    const avgWpm = sessions.length ? Math.round(sessions.reduce((a,s)=>a+s.wpm,0)/sessions.length) : 0;
+    const avgAcc = sessions.length ? Math.round(sessions.reduce((a,s)=>a+s.accuracy,0)/sessions.length) : 0;
+
+    document.getElementById("dash-best").textContent = bestWpm;
+    document.getElementById("dash-avg").textContent = avgWpm;
+    document.getElementById("dash-sessions").textContent = sessions.length;
+    document.getElementById("dash-accuracy").textContent = avgAcc + "%";
+
+    const historyEl = document.getElementById("history-list");
+    if(sessions.length === 0){
+      historyEl.innerHTML = "<div class='empty-state'>Nothing here yet — your sessions will show up once you start typing.</div>";
+      return;
+    }
+
+    historyEl.innerHTML = "";
+    sessions.slice(0,12).forEach(s => {
+      const row = document.createElement("div");
+      row.className = "history-row";
+      const modeLabel = s.mode === 30 ? "30s" : s.mode === 60 ? "1 min" : "5 min";
+      const d = new Date(s.date);
+      const dateLabel = d.toLocaleDateString(undefined, { month:"short", day:"numeric" }) + " · " + d.toLocaleTimeString(undefined, {hour:"2-digit", minute:"2-digit"});
+      row.innerHTML =
+        "<span class='mode-tag'>" + modeLabel + "</span>" +
+        "<span class='h-metrics'><span>" + s.wpm + " wpm</span><span>" + s.accuracy + "% acc</span></span>" +
+        "<span class='h-date'>" + dateLabel + "</span>";
+      historyEl.appendChild(row);
+    });
+  }
+
+  const resetBtn = document.getElementById("reset-btn");
+  let resetArmed = false;
+  let resetArmTimeout = null;
+
+  resetBtn.addEventListener("click", () => {
+    if(!resetArmed){
+      resetArmed = true;
+      resetBtn.textContent = "Click again to confirm — this can't be undone";
+      resetBtn.style.color = "var(--error)";
+      resetArmTimeout = setTimeout(() => {
+        resetArmed = false;
+        resetBtn.textContent = "Clear my saved progress";
+        resetBtn.style.color = "";
+      }, 4000);
+      return;
+    }
+
+    clearTimeout(resetArmTimeout);
+    resetArmed = false;
+    localStorage.removeItem(STORAGE_KEY);
+    localStorage.removeItem(USAGE_KEY);
+    resetBtn.textContent = "Progress cleared";
+    resetBtn.style.color = "";
+    renderDashboard();
+    setTimeout(() => { resetBtn.textContent = "Clear my saved progress"; }, 2000);
+  });
+
+  renderDashboard();
+
+})();
+</script>
+
+</body>
+</html>
